@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.mapper.UserMapper">
+    <!--public User selectUser(String name,String password);-->
+
+    <!--
+      //根据name查找是否有次用户
+    public int selectUser(String name);
+    -->
+    <select id="selectUser" resultType="java.lang.Integer">
+        select count(*) from ADMIN where NAME=#{name}
+    </select>
+    <!--
+     //注册
+    public int insertIntoAdmin(Admin admin);
+    -->
+    <insert id="insertIntoAdmin">
+        insert into ADMIN (ID,NAME,PASSWORD,EMAIL) values (TEST_SEQ.nextval,#{name},#{password},#{email})
+    </insert>
+
+
+    <select id="getUsers" resultType="com.sc.bean.Pogo">
+        select t1.relation,admin.*  from
+        (select user2id,relation from relational where user1id=#{arg0})t1 , admin
+        where admin.id  in t1.user2id and relation=#{arg1}
+    </select>
+    <select id="getUsersByNameOrRelation" resultType="com.sc.bean.Pogo">
+        select * from (select t1.relation,admin.*  from
+        (select user2id,relation from relational where user1id=#{arg0})t1 , admin
+        where admin.id  in t1.user2id)
+        where 1=1 and name like '%${arg1}%' and RELATION=#{arg2}
+    </select>
+    <delete id="delectRelationById" >
+        delete from (select t1.relation,admin.*  from
+        (select user2id,relation from relational where user1id=#{arg0})t1 , admin
+        where admin.id  in t1.user2id and relation=1) where id=#{arg1}
+    </delete>
+    <insert id="addRequestCode">
+        insert into addrequest (id,userid,addid,rel)values(rq_request.nextval,#{arg0},#{arg1},#{arg2})
+    </insert>
+
+    <select id="getUsersByPhone" resultType="com.sc.bean.Admin">
+        select * from ADMIN where PHONE like '${arg1}%' and id!=#{arg0}
+    </select>
+    <select id="getRelation" resultType="com.sc.bean.Relational">
+        select * from RELATIONAL where USER1ID=#{arg0} and USER2ID=#{arg1}
+    </select>
+    <delete id="deleteUserByArray">
+        delete from (select t1.relation,admin.*  from
+      (select user2id,relation from relational where user1id=#{arg0})t1 , admin
+      where admin.id  in t1.user2id and relation=1) where id in
+      <foreach collection="list" item="user2id" open="(" close=")" separator=",">#{user2id}</foreach>
+    </delete>
+    <select id="getRequests" resultType="com.sc.bean.Pogo1">
+        select * from
+        (select * from admin where id in ( select userid from addrequest where addid=#{id}))t1,addrequest t2
+        where t2.userid=t1.id and addid=#{id}
+    </select>
+    <insert id="agreeRelation">
+        insert into RELATIONAL t1 (t1.id,USER1ID,USER2ID)values (rq_request.nextval,#{arg0},#{arg1})
+    </insert>
+    <update id="upadteRelation">
+        update ADDREQUEST set read=#{arg2} where USERID=#{arg0} and ADDID=#{arg1}
+    </update>
+    <update id="upadteRelationById">
+        update RELATIONAL set RELATION=#{arg2} where USER1ID=#{arg0} and USER2ID=#{arg1}
+    </update>
+    <select id="getRelationById" resultType="com.sc.bean.Relational">
+        select * from RELATIONAL where USER1ID=#{arg0} and USER2ID=#{arg1}
+    </select>
+    <select id="getIdByName" resultType="com.sc.bean.Admin">
+        select * from ADMIN where name=#{name}
+    </select>
+</mapper>

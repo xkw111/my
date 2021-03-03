@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.mapper.NoteMapper">
+  <resultMap id="BaseResultMap" type="com.sc.bean.Note">
+    <id column="NID" jdbcType="DECIMAL" property="nid" />
+    <result column="NCID" jdbcType="DECIMAL" property="ncid" />
+    <result column="ADMINID" jdbcType="DECIMAL" property="adminid" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="TEXT" jdbcType="VARCHAR" property="text" />
+    <result column="RELEASETIME" jdbcType="TIMESTAMP" property="releasetime" />
+    <result column="SHARES" jdbcType="CHAR" property="shares" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    NID, NCID, ADMINID, TITLE, TEXT, RELEASETIME, SHARES
+  </sql>
+  <select id="selectByExample" parameterType="com.sc.bean.NoteExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from NOTE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from NOTE
+    where NID = #{nid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from NOTE
+    where NID = #{nid,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sc.bean.NoteExample">
+    delete from NOTE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sc.bean.Note">
+    insert into NOTE (NID, NCID, ADMINID, 
+      TITLE, TEXT, RELEASETIME, 
+      SHARES)
+    values (SEQ_NOTE.nextval, #{ncid,jdbcType=DECIMAL}, #{adminid,jdbcType=DECIMAL},
+      #{title,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, #{releasetime,jdbcType=TIMESTAMP}, 
+      #{shares,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sc.bean.Note">
+    insert into NOTE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="nid != null">
+        NID,
+      </if>
+      <if test="ncid != null">
+        NCID,
+      </if>
+      <if test="adminid != null">
+        ADMINID,
+      </if>
+      <if test="title != null">
+        TITLE,
+      </if>
+      <if test="text != null">
+        TEXT,
+      </if>
+      <if test="releasetime != null">
+        RELEASETIME,
+      </if>
+      <if test="shares != null">
+        SHARES,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="nid != null">
+        #{nid,jdbcType=DECIMAL},
+      </if>
+      <if test="ncid != null">
+        #{ncid,jdbcType=DECIMAL},
+      </if>
+      <if test="adminid != null">
+        #{adminid,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="releasetime != null">
+        #{releasetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shares != null">
+        #{shares,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sc.bean.NoteExample" resultType="java.lang.Long">
+    select count(*) from NOTE
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update NOTE
+    <set>
+      <if test="record.nid != null">
+        NID = #{record.nid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.ncid != null">
+        NCID = #{record.ncid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.adminid != null">
+        ADMINID = #{record.adminid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.title != null">
+        TITLE = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.text != null">
+        TEXT = #{record.text,jdbcType=VARCHAR},
+      </if>
+      <if test="record.releasetime != null">
+        RELEASETIME = #{record.releasetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.shares != null">
+        SHARES = #{record.shares,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update NOTE
+    set NID = #{record.nid,jdbcType=DECIMAL},
+      NCID = #{record.ncid,jdbcType=DECIMAL},
+      ADMINID = #{record.adminid,jdbcType=DECIMAL},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      TEXT = #{record.text,jdbcType=VARCHAR},
+      RELEASETIME = #{record.releasetime,jdbcType=TIMESTAMP},
+      SHARES = #{record.shares,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sc.bean.Note">
+    update NOTE
+    <set>
+      <if test="ncid != null">
+        NCID = #{ncid,jdbcType=DECIMAL},
+      </if>
+      <if test="adminid != null">
+        ADMINID = #{adminid,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null">
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        TEXT = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="releasetime != null">
+        RELEASETIME = #{releasetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shares != null">
+        SHARES = #{shares,jdbcType=CHAR},
+      </if>
+    </set>
+    where NID = #{nid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sc.bean.Note">
+    update NOTE
+    set NCID = #{ncid,jdbcType=DECIMAL},
+      ADMINID = #{adminid,jdbcType=DECIMAL},
+      TITLE = #{title,jdbcType=VARCHAR},
+      TEXT = #{text,jdbcType=VARCHAR},
+      RELEASETIME = #{releasetime,jdbcType=TIMESTAMP},
+      SHARES = #{shares,jdbcType=CHAR}
+    where NID = #{nid,jdbcType=DECIMAL}
+  </update>
+<select id="getMyNotes" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  select * from NOTE where ADMINID=#{adminid}
+</select>
+  <resultMap id="noteadmin" type="com.sc.bean.Note">
+    <id property="nid" column="nid"></id>
+    <result property="ncid" column="ncid"></result>
+    <result property="adminid" column="adminid"></result>
+    <result property="title" column="title"></result>
+    <result property="text" column="text"></result>
+    <result property="releasetime" column="releasetime"></result>
+    <result property="shares" column="shares"></result>
+    <association property="admin" javaType="com.sc.bean.Admin">
+      <id property="id" column="id"></id>
+        <result property="password" column="password"></result>
+        <result property="name" column="name"></result>
+        <result property="phone" column="phone"></result>
+    </association>
+  </resultMap>
+  <select id="getMyOrShare" resultMap="noteadmin">
+    select * from NOTE n left join ADMIN a on n.ADMINID=a.ID where
+    <if test="title!=null and title!=''">
+      TITLE like '%${title}%' and
+    </if>
+    (ADMINID=#{adminid} or SHARES=#{shares})
+  </select>
+</mapper>

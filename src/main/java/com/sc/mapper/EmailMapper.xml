@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.mapper.EmailMapper">
+  <resultMap id="BaseResultMap" type="com.sc.bean.Email">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="SEND" jdbcType="VARCHAR" property="send" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="MSGCONTENT" jdbcType="VARCHAR" property="msgcontent" />
+    <result column="STATE" jdbcType="DECIMAL" property="state" />
+    <result column="ACCEPT" jdbcType="VARCHAR" property="accept" />
+    <result column="MSG_CREATE_DATA" jdbcType="TIMESTAMP" property="msgCreateData" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, SEND, TITLE, MSGCONTENT, STATE, ACCEPT, MSG_CREATE_DATA
+  </sql>
+  <select id="selectByExample" parameterType="com.sc.bean.EmailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from EMAIL
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from EMAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from EMAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sc.bean.EmailExample">
+    delete from EMAIL
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sc.bean.Email">
+    insert into EMAIL (ID, SEND, TITLE, 
+      MSGCONTENT, STATE, ACCEPT, 
+      MSG_CREATE_DATA)
+    values (TEST_SEQ.nextval, #{send,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+      #{msgcontent,jdbcType=VARCHAR}, #{state,jdbcType=DECIMAL}, #{accept,jdbcType=VARCHAR}, 
+      #{msgCreateData,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sc.bean.Email">
+    insert into EMAIL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="send != null">
+        SEND,
+      </if>
+      <if test="title != null">
+        TITLE,
+      </if>
+      <if test="msgcontent != null">
+        MSGCONTENT,
+      </if>
+      <if test="state != null">
+        STATE,
+      </if>
+      <if test="accept != null">
+        ACCEPT,
+      </if>
+      <if test="msgCreateData != null">
+        MSG_CREATE_DATA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="send != null">
+        #{send,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="msgcontent != null">
+        #{msgcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=DECIMAL},
+      </if>
+      <if test="accept != null">
+        #{accept,jdbcType=VARCHAR},
+      </if>
+      <if test="msgCreateData != null">
+        #{msgCreateData,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sc.bean.EmailExample" resultType="java.lang.Long">
+    select count(*) from EMAIL
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update EMAIL
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.send != null">
+        SEND = #{record.send,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        TITLE = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgcontent != null">
+        MSGCONTENT = #{record.msgcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        STATE = #{record.state,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accept != null">
+        ACCEPT = #{record.accept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgCreateData != null">
+        MSG_CREATE_DATA = #{record.msgCreateData,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update EMAIL
+    set ID = #{record.id,jdbcType=DECIMAL},
+      SEND = #{record.send,jdbcType=VARCHAR},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      MSGCONTENT = #{record.msgcontent,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=DECIMAL},
+      ACCEPT = #{record.accept,jdbcType=VARCHAR},
+      MSG_CREATE_DATA = #{record.msgCreateData,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sc.bean.Email">
+    update EMAIL
+    <set>
+      <if test="send != null">
+        SEND = #{send,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="msgcontent != null">
+        MSGCONTENT = #{msgcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        STATE = #{state,jdbcType=DECIMAL},
+      </if>
+      <if test="accept != null">
+        ACCEPT = #{accept,jdbcType=VARCHAR},
+      </if>
+      <if test="msgCreateData != null">
+        MSG_CREATE_DATA = #{msgCreateData,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sc.bean.Email">
+    update EMAIL
+    set SEND = #{send,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      MSGCONTENT = #{msgcontent,jdbcType=VARCHAR},
+      STATE = #{state,jdbcType=DECIMAL},
+      ACCEPT = #{accept,jdbcType=VARCHAR},
+      MSG_CREATE_DATA = #{msgCreateData,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

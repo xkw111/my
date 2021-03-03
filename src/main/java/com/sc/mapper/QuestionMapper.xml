@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.mapper.QuestionMapper">
+   <!--
+     //查询所有试题
+    public List<Question> getAllQuestion(String page,String size);
+   -->
+    <select id="getAllQuestion" resultType="com.sc.bean.Question">
+         select * from question
+    </select>
+    <!--
+     public List<Question> getAllQuestionByFenye(String page,String size);
+    -->
+    <select id="getAllQuestionByFenye" resultType="com.sc.bean.Question">
+          select t2.* from (select t1.*,rownum rn from question t1 where rownum &lt;= (#{param1}*#{param2}) )t2 where rn>((#{param1}-1)*#{param2})
+    </select>
+    <!--
+    //修改试题
+    public int modifyQuestion(Question question);
+    private Long qid;    //题目id
+  private Integer qkid;     //题目所属科目Id
+  private String title;      //题目
+  private String answer;     //题目答案
+  private String analysis;     //题目解析
+  private String optiona;      //选项A
+  private String optionb;      //选项B
+  private String optionc;       //选项C
+  private String optiond;      //选项D
+  private Integer difficult;     //题目难度  1-5 数字越大难度越高
+    -->
+    <update id="modifyQuestion" >
+        update QUESTION set qkid=#{qkid},title=#{title},answer=#{answer},analysis=#{analysis},optiona=#{optiona},optionb=#{optionb},optionc=#{optionc},optiond=#{optiond},difficult=#{difficult} where qid=#{qid}
+    </update>
+    <!--
+     //根据id集合删除试题
+    public int deleteQuestionByList(List<String> list);
+    -->
+    <delete id="deleteQuestionByList">
+        delete from QUESTION where QID in
+        <foreach collection="list" item="id"   open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+    <!--
+     //添加试题
+    public int addQuestion(Question question);
+    -->
+    <insert id="addQuestion">
+        insert into QUESTION values (TEST_SEQ.nextval,#{qkid},#{title},#{answer},#{analysis},#{optiona},#{optionb},#{optionc},#{optiond},#{difficult})
+    </insert>
+    <!--
+     //一次添加多个试题对象
+    public int addQuestionByList(List<Question> list);
+    -->
+    <!--
+   //修改试题
+   public int modifyQuestion(Question question);
+   private Long qid;    //题目id
+ private Integer qkid;     //题目所属科目Id
+ private String title;      //题目
+ private String answer;     //题目答案
+ private String analysis;     //题目解析
+ private String optiona;      //选项A
+ private String optionb;      //选项B
+ private String optionc;       //选项C
+ private String optiond;      //选项D
+ private Integer difficult;     //题目难度  1-5 数字越大难度越高
+   -->
+    <insert id="addQuestionByList">
+        insert into QUESTION
+        <foreach collection="list" item="q" separator="union" index="index" open="("  close=")">
+           select #{q.qid},#{q.qkid},#{q.title},#{q.answer},#{q.analysis},#{q.optiona},#{q.optionb},#{q.optionc},#{q.optiond},#{q.difficult} from dual
+        </foreach>
+    </insert>
+</mapper>

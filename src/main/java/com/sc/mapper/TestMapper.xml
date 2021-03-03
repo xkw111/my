@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.mapper.TestMapper">
+    <!--
+    public int getKem(String k);
+    -->
+    <select id="getKem" resultType="java.lang.Integer">
+        select KID from SUBJECT where KNAME=#{kname}
+    </select>
+
+    <!--public List<Question> getQuest(Integer id);-->
+    <select id="getQuest" resultType="com.sc.bean.Question">
+        select * from (select * from question order by trunc(dbms_random.value(1,11)) asc)t1 where
+        <![CDATA[
+            rownum <= 5
+        ]]>
+    </select>
+    <!--
+    //将试卷信息插入试卷表
+    public int insertInToSJB(Testpage testpage);
+    -->
+    <insert id="insertInToSJB">
+        insert into SCOTT.TESTPAGE (TPID, TPNAME, TPSUB, TPBEGINTIME, TPSCORE, TPNUM, TPSINGLESCORE, TPSJ) values (#{tpid},#{tpname},#{tpsub},to_date('${tpbegintime}','YYYY-MM-DD HH24:MI:SS'),#{tpscore},#{tpnum},#{tpsinglescore},#{tpsj})
+    </insert>
+    <!--
+    //将试卷题目写入试卷详情表
+    public int insertintotestinfotable(Testinfo testinfo);
+    -->
+    <insert id="insertintotestinfotable">
+        insert into TESTINFO values (TEST_SEQ.nextval,#{tinfopaperid},#{tinfosuqid})
+    </insert>
+    <!--
+     public int setEaxmInfo(List<Examinfo> list);
+    -->
+    <insert id="setEaxmInfo">
+        insert into EXAMINFO values (TEST_SEQ.nextval,#{euserid},#{paperid},#{eqid},#{euseranswer},#{escore})
+    </insert>
+    <!--
+     //写入试卷成绩表
+    public int setTotalScore(Totalscore totalscore);
+    -->
+    <insert id="setTotalScore">
+        insert into TOTALSCORE values (TEST_SEQ.nextval,#{userid},#{paperid},#{allscore})
+    </insert>
+    <!--
+    public List<Examinfo> getExamInfoById(String id);
+    -->
+    <select id="getExamInfoById" resultType="com.sc.bean.Examinfo">
+        select * from EXAMINFO where EUSERID=#{id}
+    </select>
+    <!--
+    //根据用户id查找试卷总分表
+    public List<Totalscore> getTotalScoreById(String id);
+    -->
+    <select id="getTotalScoreById" resultType="com.sc.bean.Totalscore">
+        select * from TOTALSCORE where USERID=#{id}
+    </select>
+    <!--
+     public List<Testpage> getAllTestpageByList(List<Long> list);
+    -->
+    <select id="getAllTestpageByList" resultType="com.sc.bean.Testpage">
+        select  * from TESTPAGE where TPID in
+        <foreach collection="list" item="id"   open="(" close=")" separator=",">#{id}</foreach>
+    </select>
+    <!--
+      public List<PageVo> getPageVo(String pageIndex,String pageSize,String sjid,String sjm,String kscjl,String kscjr,String kskm,String userid);
+    -->
+    <select id="getPageVo" resultType="com.sc.bean.PageVo">
+
+        select t3.* from (select rownum rn,t1.paperid paperid,t1.allscore allscore,t2.tpname tpname, t2.tpsub tpsub,t2.tpbegintime tpbegintime,t2.tpsj tpsj,t2.tpscore tpscore from totalscore t1,testpage t2 where t1.paperid=t2.tpid
+        and  t1.userid=#{arg7} and  allscore>=#{arg4} and allscore &lt;= #{arg5} and paperid like '%${arg2}%'and tpname like '%${arg3}%' and tpsub=#{arg6})t3 where rn>(#{arg0}-1)*#{arg1} and rownum &lt;= #{arg0}*#{arg1}
+
+
+    </select>
+    <!--
+     public List<PageVo> getAllPageVoNumber(String pageIndex,String pageSize,String sjid,String sjm,String kscjl,String kscjr,String kskm,String userid);
+    -->
+    <select id="getAllPageVoNumber" resultType="java.lang.Integer">
+        select count(*) from (select rownum rn,t1.paperid paperid,t1.allscore allscore,t2.tpname tpname, t2.tpsub tpsub,t2.tpbegintime tpbegintime,t2.tpsj tpsj,t2.tpscore tpscore from totalscore t1,testpage t2 where t1.paperid=t2.tpid
+        and  t1.userid=#{arg7} and  allscore>=#{arg4} and allscore &lt;= #{arg5} and paperid like '%${arg2}%'and tpname like '%${arg3}%' and tpsub=#{arg6})
+    </select>
+
+    <!--
+    public List<TestHisInfo> getTestHisInfo(String paperid);
+    -->
+    <select id="getTestHisInfo" resultType="com.sc.bean.TestHisInfo">
+        select examinfo.euseranswer useranswer,examinfo.escore escore,question.title title,question.answer answer,question.analysis analysis,question.optiona optiona,question.optionb optionb,question.optionc optionc,question.optiond optiond from question,examinfo where question.qid=examinfo.eqid and examinfo.paperid=#{paperid}
+    </select>
+</mapper>

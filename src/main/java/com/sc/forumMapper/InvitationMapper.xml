@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sc.forumMapper.InvitationMapper">
+  <resultMap id="BaseResultMap" type="com.sc.forumEntity.Invitation">
+    <result column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="TYPE" jdbcType="DECIMAL" property="type" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author" />
+    <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+    <result column="STICK" jdbcType="DECIMAL" property="stick" />
+    <result column="QUINTESSENCE" jdbcType="DECIMAL" property="quintessence" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, TYPE, TITLE, AUTHOR, CONTENT, STICK, QUINTESSENCE, STATUS, TIME
+  </sql>
+  <select id="selectByExample" parameterType="com.sc.forumEntity.InvitationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from INVITATION
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.sc.forumEntity.InvitationExample">
+    delete from INVITATION
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sc.forumEntity.Invitation">
+    insert into INVITATION (ID, TYPE, TITLE, 
+      AUTHOR, CONTENT, STICK, 
+      QUINTESSENCE, STATUS, TIME
+      )
+    values (TEST_SEQ.nextval, #{type,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR},
+      #{author,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{stick,jdbcType=DECIMAL}, 
+      #{quintessence,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <select id="getInvitationById"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+  select * from INVITATION WHERE ID=#{invitationId}
+  </select>
+  <insert id="insertSelective" parameterType="com.sc.forumEntity.Invitation">
+    insert into INVITATION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="title != null">
+        TITLE,
+      </if>
+      <if test="author != null">
+        AUTHOR,
+      </if>
+      <if test="content != null">
+        CONTENT,
+      </if>
+      <if test="stick != null">
+        STICK,
+      </if>
+      <if test="quintessence != null">
+        QUINTESSENCE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="stick != null">
+        #{stick,jdbcType=DECIMAL},
+      </if>
+      <if test="quintessence != null">
+        #{quintessence,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sc.forumEntity.InvitationExample" resultType="java.lang.Long">
+    select count(*) from INVITATION
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update INVITATION
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.type != null">
+        TYPE = #{record.type,jdbcType=DECIMAL},
+      </if>
+      <if test="record.title != null">
+        TITLE = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.author != null">
+        AUTHOR = #{record.author,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        CONTENT = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stick != null">
+        STICK = #{record.stick,jdbcType=DECIMAL},
+      </if>
+      <if test="record.quintessence != null">
+        QUINTESSENCE = #{record.quintessence,jdbcType=DECIMAL},
+      </if>
+      <if test="record.status != null">
+        STATUS = #{record.status,jdbcType=DECIMAL},
+      </if>
+      <if test="record.time != null">
+        TIME = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update INVITATION
+    set ID = #{record.id,jdbcType=DECIMAL},
+      TYPE = #{record.type,jdbcType=DECIMAL},
+      TITLE = #{record.title,jdbcType=VARCHAR},
+      AUTHOR = #{record.author,jdbcType=VARCHAR},
+      CONTENT = #{record.content,jdbcType=VARCHAR},
+      STICK = #{record.stick,jdbcType=DECIMAL},
+      QUINTESSENCE = #{record.quintessence,jdbcType=DECIMAL},
+      STATUS = #{record.status,jdbcType=DECIMAL},
+      TIME = #{record.time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateInvitationByArray">
+    update INVITATION SET STATUS = 1 where ID in
+    <foreach collection="list" item="i" open="(" close=")" separator=",">
+     #{i.id}
+    </foreach>
+  </update>
+</mapper>
